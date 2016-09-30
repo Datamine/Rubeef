@@ -28,7 +28,7 @@ class State
       elsif command == "<"
         @data_pointer -= 1
       elsif command == "."
-        print @tape[@data_pointer]
+        print @tape[@data_pointer].chr
       elsif command == ","
         input = STDIN.getch
         if input == chr(26)
@@ -71,6 +71,7 @@ class State
       @instruction_pointer += 1
     end
   end
+
   def valid_state
     # check that the current state of the program is valid, given bf rules
     return (0 <= @data_pointer) && (@data_pointer < @@tape_length) && (@instruction_pointer < @script_length)
