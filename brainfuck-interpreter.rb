@@ -18,49 +18,54 @@ class State
       command = @script[@instruction_pointer]
       # nb: a statistical ordered approach to minimize if-statements would be wise
       # should i use case/switch here?
-      if command == "+"
+      case command
+      when "+"
         # think i need to do byte-wise increment, not numerical
         @tape[@data_pointer] += 1
-      elsif command == "-"
+      when "-"
         @tape[@data_pointer] -= 1
-      elsif command == ">"
+      when ">"
         @data_pointer += 1
-      elsif command == "<"
+      when "<"
         @data_pointer -= 1
-      elsif command == "."
-        print @tape[@data_pointer].chr
-      elsif command == ","
+      when "."
+          print @tape[@data_pointer].chr
+      when ","
+        print "here"
         input = STDIN.getch
-        if input == chr(26)
+        input = input.ord
+        puts "++", [input]
+        if input == 26 or input == 13
           # handle EOF
           input = 0
         else
           input = input
         end
+        print "here2"
         @tape[@data_pointer] = input
-      elsif command == "["
+        print "here3"
+      when "["
         if @tape[@data_pointer] == 0
           # skip to the next "]", unless it cannot be found (then break).
           begin
             while @script[@instruction_pointer] != "]"
               @instruction_pointer += 1
             end
-            next
+            #next
           rescue Exception => e
             puts e.message
             puts e.backtrace.inspect
             exit(false)
           end
         end
-      else
-        # the command == "]" case
+      when "]"
         unless @tape[@data_pointer] == 0
           # skip to the previous "[", unless it cannot be found (then break).
           begin
             while @script[@instruction_pointer] != "["
               @instruction_pointer -= 1
             end
-            next
+            #next
           rescue Exception => e
             puts e.message
             puts e.backtrace.inspect
@@ -74,16 +79,18 @@ class State
 
   def valid_state
     # check that the current state of the program is valid, given bf rules
-    return (0 <= @data_pointer) && (@data_pointer < @@tape_length) && (@instruction_pointer < @script_length)
+    return (0 <= @data_pointer) && (@data_pointer < @@tape_length) &&
+           (0 <= @instruction_pointer) && (@instruction_pointer < @script_length)
   end
 end
 
-brainfuck_not_allowed_regex = /[^(>|<|\+|\-|\.|,|\]|\[)]/
+brainfuck_not_allowed_regex = /[^>|<|\+|\-|\.|,|\]|\[]/
 to_interpret = ARGV[0]
 
 # read the script into memory, strip it of cruft, join the string.
 script_text = IO.readlines(to_interpret).map(&:strip).join(' ')
 script_text.gsub!(brainfuck_not_allowed_regex, "")
 
+print script_text
 interpreter_instance = State.new(script_text)
 interpreter_instance.interpret
