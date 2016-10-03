@@ -5,7 +5,6 @@ require 'io/console'
 
 class State
   @@tape_length = 10
-  attr_accessor :command
   def initialize(script)
     @tape = [0] * @@tape_length
     @data_pointer = 0
@@ -31,8 +30,6 @@ class State
       end
       instruction_pointer += 1
     end
-    jumphash.keys.each do |k|
-      print k, jumphash[k], "\n"
     return jumphash
   end
 
@@ -52,7 +49,8 @@ class State
       when "."
         print @tape[@data_pointer].chr
       when ","
-        @tape[@data_pointer] = STDIN.getch.ord
+        @tape[@data_pointer] = "7".ord
+        #@tape[@data_pointer] = STDIN.getch.ord
       when "["
         if @tape[@data_pointer] == 0
           @instruction_pointer = @jumps[@instruction_pointer]

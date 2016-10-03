@@ -16,8 +16,8 @@ def precompute_jumps(program):
             ret[target] = pc
             ret[pc] = target 
         pc += 1
-    for k in sorted(ret.keys()):
-        print k, ret[k]
+    #for k in sorted(ret.keys()):
+    #    print k, ret[k]
     return ret
 
 def run(program):
