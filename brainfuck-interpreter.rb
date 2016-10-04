@@ -57,6 +57,8 @@ class State
           # but in Python it's ASCII 10. The `primes.bf` script and some others
           # assume that the enter key is represented by ASCII 10.
           input = 10
+        elsif input==3
+          exit()
         end
         @tape[@data_pointer] = input
       when "["
