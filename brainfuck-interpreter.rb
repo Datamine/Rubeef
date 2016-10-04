@@ -6,7 +6,7 @@ require 'io/console'
 class State
   @@tape_length = 10
   def initialize(script)
-    @tape = [0] * @@tape_length
+    @tape = [0]
     @data_pointer = 0
     @instruction_pointer = 0
     @script = script
@@ -36,7 +36,6 @@ class State
   def interpret
     while valid_state do
       command = @script[@instruction_pointer]
-      #print "#{@instruction_pointer} #{command} #{@data_pointer} #{@tape}\n"
       case command
       when "+"
         @tape[@data_pointer] += 1
@@ -44,13 +43,22 @@ class State
         @tape[@data_pointer] -= 1
       when ">"
         @data_pointer += 1
+        if @data_pointer == @tape.length
+          @tape << 0
+        end
       when "<"
         @data_pointer -= 1
       when "."
         print @tape[@data_pointer].chr
       when ","
-        @tape[@data_pointer] = "7".ord
-        #@tape[@data_pointer] = STDIN.getch.ord
+        input = STDIN.getch.ord
+        if input==10 or input==13
+          # fascinating: ruby's parsing of the enter/return key is ASCII 13,
+          # but in Python it's ASCII 10. The `primes.bf` script and some others
+          # assume that the enter key is represented by ASCII 10.
+          input = 10
+        end
+        @tape[@data_pointer] = input
       when "["
         if @tape[@data_pointer] == 0
           @instruction_pointer = @jumps[@instruction_pointer]
@@ -66,7 +74,7 @@ class State
 
   def valid_state
     # check that the current state of the program is valid, given bf rules
-    return (0 <= @data_pointer) && (@data_pointer < @@tape_length) &&
+    return (0 <= @data_pointer) && (@data_pointer < @tape.length) &&
            (0 <= @instruction_pointer) && (@instruction_pointer < @script_length)
   end
 end
@@ -77,7 +85,6 @@ to_interpret = ARGV[0]
 # read the script into memory, strip it of cruft, join the string.
 script_text = IO.readlines(to_interpret).map(&:strip).join(' ')
 script_text.gsub!(brainfuck_not_allowed_regex, "")
-#print script_text
 
 interpreter_instance = State.new(script_text)
 interpreter_instance.interpret

@@ -26,9 +26,11 @@ def run(program):
 
     ptr = 0
     pc = 0
+    #count = 0
 
     while not pc == len(program):
         opcode = program[pc]
+        #print pc, opcode, ptr, buffer
         if opcode == ">": 
             ptr += 1
             if ptr == len(buffer): buffer.append(0)
@@ -39,7 +41,10 @@ def run(program):
             sys.stdout.write(chr(buffer[ptr]))
             sys.stdout.flush()
         elif opcode == ",": 
+            #print "count", count
+            #count +=1
             buffer[ptr] = ord(sys.stdin.read(1))
+            #print [buffer[ptr]]
         elif opcode == "[":
             if buffer[ptr] == 0: pc = jump_map[pc]
         elif opcode == "]":
