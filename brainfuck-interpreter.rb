@@ -30,6 +30,12 @@ class State
     return jumphash
   end
 
+  def valid_state
+    # check that the current state of the program is valid, given bf rules
+    return (0 <= @data_pointer) && (@data_pointer < @tape.length) &&
+           (0 <= @instruction_pointer) && (@instruction_pointer < @script_length)
+  end
+
   def interpret
     while valid_state do
       command = @script[@instruction_pointer]
@@ -69,12 +75,6 @@ class State
       end
       @instruction_pointer += 1
     end
-  end
-
-  def valid_state
-    # check that the current state of the program is valid, given bf rules
-    return (0 <= @data_pointer) && (@data_pointer < @tape.length) &&
-           (0 <= @instruction_pointer) && (@instruction_pointer < @script_length)
   end
 end
 
