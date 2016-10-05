@@ -1,10 +1,7 @@
 # Ruby 2.3.1
 # takes one command-line argument: name of file to interpret
 
-require 'io/console'
-
 class State
-  @@tape_length = 10
   def initialize(script)
     @tape = [0]
     @data_pointer = 0
@@ -36,6 +33,7 @@ class State
   def interpret
     while valid_state do
       command = @script[@instruction_pointer]
+      #print "#{command} #{@instruction_pointer} #{@data_pointer} #{@tape}\n"
       case command
       when "+"
         @tape[@data_pointer] += 1
@@ -52,10 +50,9 @@ class State
         print @tape[@data_pointer].chr
       when ","
         input = STDIN.read(1).ord
-        if input==10 or input==13
-          # fascinating: ruby's parsing of the enter/return key is ASCII 13,
-          # but in Python it's ASCII 10. The `primes.bf` script and some others
-          # assume that the enter key is represented by ASCII 10.
+        if input==13
+          # Most bf scripts assume that the enter key is represented by ASCII 10.
+          # (This may not always be the case.)
           input = 10
         elsif input==3
           exit()
