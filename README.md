@@ -14,6 +14,11 @@ to handle input properly. Most bf scripts seem to be written to accommodate only
 ASCII 10 as a newline indicator, not ASCII 13 as well (and feeding in one when the 
 script expects the other can result in all kinds of strange bugs).
 
+## Caveats:
+
+The canonical BF interpreter is really only meant to support 8-bit cells.
+I did not put a size restriction on my cells, though it would be easy to do so.
+
 ## Credits:
 
 - Python reference versions from https://github.com/pablojorge/brainfuck
