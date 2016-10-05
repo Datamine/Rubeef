@@ -51,7 +51,7 @@ class State
       when "."
         print @tape[@data_pointer].chr
       when ","
-        input = STDIN.getch.ord
+        input = STDIN.read(1).ord
         if input==10 or input==13
           # fascinating: ruby's parsing of the enter/return key is ASCII 13,
           # but in Python it's ASCII 10. The `primes.bf` script and some others
